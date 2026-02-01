@@ -1,14 +1,22 @@
 # Google Street View Panorama Downloader
 
-A simple Python script to download full-resolution user-contributed panoramas (photospheres) from Google Maps.
+A Python utility to download full-resolution user-contributed panoramas (photospheres) from Google Maps.
 
 ## Description
 
-This tool accepts a shortened Google Maps URL (e.g., `https://maps.app.goo.gl/...`), resolves it, and extracts the highest resolution image available. It handles the intermediate Google Consent page redirection and decodes the internal image URLs to fetch the original panorama.
+This tool resolves shortened Google Maps URLs (e.g., `https://maps.app.goo.gl/...`), handles Google Consent page redirections, and decodes internal image URLs to extract and download the highest resolution panorama available.
+
+## Features
+
+- **URL Resolution**: Automatically expands shortened URLs.
+- **High Resolution**: Fetches the maximum available dimensions (up to 8192x4096 or higher where available).
+- **Consent Handling**: Bypasses the strict Google Consent redirects.
+- **Configurable**: Easy configuration via `config.py`.
+- **Organized Output**: Saves files to a dedicated `download/` directory.
 
 ## Installation
 
-1. Clone or download this repository.
+1. Clone this repository.
 2. Install the required dependencies:
 
     ```bash
@@ -17,14 +25,15 @@ This tool accepts a shortened Google Maps URL (e.g., `https://maps.app.goo.gl/..
 
 ## Usage
 
-1. Open `panorama-download.py` in your text editor.
-2. Modify the `pano_url` and `image_name` variables in the `__main__` block at the bottom of the file:
+1. Open `config.py` in your text editor.
+2. Update the configuration variables:
 
     ```python
-    if __name__ == "__main__":
-        pano_url = 'https://maps.app.goo.gl/ID_OF_PANORAMA'
-        image_name = 'my_panorama.jpg'
-        download_panorama(pano_url, image_name)
+    # The Google Maps URL of the panorama
+    PANO_URL = 'https://maps.app.goo.gl/...'
+
+    # The output filename
+    IMAGE_NAME = 'my_panorama.jpg'
     ```
 
 3. Run the script:
@@ -33,25 +42,22 @@ This tool accepts a shortened Google Maps URL (e.g., `https://maps.app.goo.gl/..
     python panorama-download.py
     ```
 
+The downloaded image will be saved in the `download/` directory, e.g., `download/my_panorama.jpg`.
+
 ## How it Works
 
-1. **URL Resolution**: Expands the shortened `maps.app.goo.gl` URL.
-2. **Consent Handling**: Detects if the response is a Google Consent page and parses the query parameters to find the `continue` URL.
-3. **Pattern Matching**: Searches the final URL for the specific pattern (`!6s...`) that contains the encoded image URL.
-4. **Decoding**: Iteratively URL-decodes the segment until a valid `https` link is found.
-5. **Dimension Extraction**: Finds `!7i` and `!8i` parameters to determine the maximum available width and height (defaulting to 8192x4096 if not found).
-6. **Download**: constructs the direct image URL and streams the download to the specified output file.
+1. **Resolution**: Expands the initial URL.
+2. **extraction**: Parses query parameters to find the deep link.
+3. **Decoding**: Decodes the weird `!6s...` patterns to find the real image URL.
+4. **Resizing**: Manipulates URL parameters to request the highest resolution (`!7i` width, `!8i` height).
+5. **Downloading**: Streams the content to the local disk.
 
 ## Legal Warning & Disclaimer
 
 **Usage of this tool is for educational purposes only.**
 
-By using this software, you agree to comply with Google's Terms of Service. Please be aware of the following:
+By using this software, you agree to comply with Google's Terms of Service.
 
-1. **Copyright**: Panoramas and photospheres are subject to copyright. User-contributed content belongs to the original photographer, while Google-captured street view imagery belongs to Google. You generally do not have the right to use these images for commercial purposes, redistribution, or public display without express permission from the copyright holder.
-2. **Terms of Service**: Automated scraping or mass downloading of content from Google Maps typically violates Google's Terms of Service. Using this tool to download data against these terms may result in your IP address being blocked or legal action.
-3. **Google Maps/Google Earth Additional Terms**: According to Google's [Additional Terms of Service](https://www.google.com/help/terms_maps/), you may not:
-    * systematically retrieve content to create or compile, directly or indirectly, a collection, compilation, database, or directory.
-    * use the content with other products or services.
-
-**The author of this script assumes no liability for how you use this tool or for any violation of terms, copyright laws, or other regulations.** Please use responsibly and respect the rights of content creators.
+- **Copyright**: Images belong to their respective owners (photographers or Google).
+- **Terms**: Automated downloading may violate Google's Terms of Service.
+- **Liability**: The author assumes no liability for misuse of this tool. Use responsibly.

@@ -2,6 +2,8 @@ import requests
 import re
 import urllib.parse
 import sys
+import os
+import config
 
 def download_panorama(url, output_file="image.jpg"):
     print(f"Resolving URL: {url}")
@@ -66,7 +68,13 @@ def download_panorama(url, output_file="image.jpg"):
         print(f"Failed to download image. Status code: {r.status_code}")
 
 if __name__ == "__main__":
-    pano_url = 'https://maps.app.goo.gl/ID_OF_PANORAMA'
-    image_name = 'my_panorama.jpg'
+    # Create download directory if it doesn't exist
+    download_dir = "download"
+    if not os.path.exists(download_dir):
+        os.makedirs(download_dir)
+        print(f"Created directory: {download_dir}")
+
+    # Construct the full output path
+    output_path = os.path.join(download_dir, config.IMAGE_NAME)
    
-    download_panorama(pano_url, image_name)
+    download_panorama(config.PANO_URL, output_path)
