@@ -111,8 +111,6 @@ class PanoramaDownloaderApp:
                  self.download_finished("Error: Failed to decode image URL.", error=True)
                  return
 
-            base_image_url = decoded_url.split('=')[0]
-            
             # Extract resolution
             unquoted_target = urllib.parse.unquote(target_url)
             width_match = re.search(r'!7i(\d+)', unquoted_target)
@@ -123,7 +121,17 @@ class PanoramaDownloaderApp:
             
             self.update_status(f"Found dimensions: {width}x{height}. Downloading...")
             
-            full_res_url = f"{base_image_url}=w{width}-h{height}-k-no"
+            # Try to extract panoid and construct valid URL
+            parsed_url = urllib.parse.urlparse(decoded_url)
+            qs = urllib.parse.parse_qs(parsed_url.query)
+            
+            if 'panoid' in qs:
+                panoid = qs['panoid'][0]
+                base = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
+                full_res_url = f"{base}?panoid={panoid}&w={width}&h={height}"
+            else:
+                base_image_url = decoded_url.split('=')[0]
+                full_res_url = f"{base_image_url}=w{width}-h{height}-k-no"
             
             # Directory setup
             # Directory setup

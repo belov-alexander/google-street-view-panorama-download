@@ -43,8 +43,6 @@ def download_panorama(url, output_file="image.jpg"):
          print("Error: Failed to decode image URL.")
          return
 
-    base_image_url = decoded_url.split('=')[0]
-    
     # Extract resolution (!7iW!8iH)
     unquoted_target = urllib.parse.unquote(target_url)
     width_match = re.search(r'!7i(\d+)', unquoted_target)
@@ -54,8 +52,20 @@ def download_panorama(url, output_file="image.jpg"):
     height = height_match.group(1) if height_match else "4096"
     
     print(f"Found panorama dimensions: {width}x{height}")
+
+    # Try to extract panoid and construct valid URL
+    parsed_url = urllib.parse.urlparse(decoded_url)
+    qs = urllib.parse.parse_qs(parsed_url.query)
     
-    full_res_url = f"{base_image_url}=w{width}-h{height}-k-no"
+    if 'panoid' in qs:
+        panoid = qs['panoid'][0]
+        base = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
+        # Construct URL with standard query parameters
+        full_res_url = f"{base}?panoid={panoid}&w={width}&h={height}"
+    else:
+        base_image_url = decoded_url.split('=')[0]
+        full_res_url = f"{base_image_url}=w{width}-h{height}-k-no"
+
     print(f"Downloading from: {full_res_url}")
     
     r = requests.get(full_res_url, stream=True)
