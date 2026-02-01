@@ -39,10 +39,22 @@ This tool resolves shortened Google Maps URLs (e.g., `https://maps.app.goo.gl/..
 3. Run the script:
 
     ```bash
+    # Command Line Interface
     python panorama-download.py
+
+    # Graphical User Interface
+    python panorama-download-GUI.py
     ```
 
 The downloaded image will be saved in the `download/` directory, e.g., `download/my_panorama.jpg`.
+
+## GUI Version
+
+The `panorama-download-GUI.py` script provides a user-friendly window:
+
+1. **Panorama URL**: Paste the Google Maps link here.
+2. **Output Filename**: Name of the file to save.
+3. **Save Panorama**: Click to start downloading. Status will be shown in the window.
 
 ## How it Works
 
