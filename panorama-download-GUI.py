@@ -126,7 +126,9 @@ class PanoramaDownloaderApp:
             full_res_url = f"{base_image_url}=w{width}-h{height}-k-no"
             
             # Directory setup
-            download_dir = "download"
+            # Directory setup
+            script_dir = os.path.dirname(os.path.abspath(__file__))
+            download_dir = os.path.join(script_dir, "download")
             if not os.path.exists(download_dir):
                 os.makedirs(download_dir)
             
